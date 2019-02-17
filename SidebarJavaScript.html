@@ -1,0 +1,62 @@
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script>
+  /**
+   * 読み込み後処理
+   */
+  $(function () {
+    // シート名を取得してボタンを作成する
+    google.script.run
+      .withSuccessHandler(
+        function (msg, element) {
+          var sheetNames = JSON.parse(msg);
+          makeButtons(sheetNames);
+        })
+      .withUserObject(this)
+      .getSheetNames();
+
+    // 検索窓にinputされる度にボタンを絞り込む
+    $('#search_word').on('input', search);
+  });
+
+  // ボタンを作成する
+  function makeButtons(sheetNames) {
+    for (var i = 0, l = sheetNames.length; i < l; i++) {
+      $('#toc').append('<input type="button" value="' + sheetNames[i] + '" class="toc_button width-100">');
+    }
+    $('.toc_button').on('click', function () {
+      activate($(this));
+    });
+  }
+
+  // 対象のシートをアクティブにする
+  function activate(button) {
+    button.prop('disabled', true);
+    google.script.run
+      .withSuccessHandler(
+        function (msg, element) {
+          button.prop('disabled', false);
+        })
+      .withUserObject(this)
+      .activateSheet(button.val());
+  }
+
+  // 単語でボタンを絞り込む
+  function search() {
+    var word = $('#search_word').val();
+    if (word === '') {
+      $('.toc_button').each(function () {
+        $(this).show();
+      });
+      return;
+    }
+    $('.toc_button').each(function () {
+      var button = $(this);
+      var targetText = button.val();
+      if(targetText.indexOf(word) != -1){
+        button.show();
+      }else{
+        button.hide();
+      }
+    });
+  }
+</script>

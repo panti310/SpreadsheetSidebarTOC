@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <base target="_top">
+  <!-- スタイルシートを読み込む -->
+  <?!= HtmlService.createHtmlOutputFromFile('Stylesheet').getContent(); ?>
+</head>
+
+<body>
+  <!-- サイドバーに表示するものを記述する -->
+  <div class="block form-group" id="sidebar-value-block">
+    <label for="search_word">絞り込み</label>
+    <input id="search_word" class="width-100">
+  </div>
+  <div class="sidebar">
+    <div id="toc">
+    </div>
+  </div>
+  <!-- スクリプトを読み込む -->
+  <?!= HtmlService.createHtmlOutputFromFile('SidebarJavaScript').getContent(); ?>
+</body>
+
+</html>
